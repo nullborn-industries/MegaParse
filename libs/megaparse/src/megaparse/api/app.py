@@ -74,7 +74,13 @@ async def parse_file(
             status_code=503, detail="Service unavailable due to low memory"
         )
     model = None
-    if model_name and check_table:
+    base_url = os.getenv("LLM_API_BASE")
+    if base_url:
+        model = ChatOpenAI(
+            base_url=base_url,
+            api_key=os.getenv("OPENAI_API_KEY"),
+        )
+    elif model_name and check_table:
         if model_name.startswith("gpt"):
             model = ChatOpenAI(model=model_name, api_key=os.getenv("OPENAI_API_KEY"))  # type: ignore
         elif model_name.startswith("claude"):
